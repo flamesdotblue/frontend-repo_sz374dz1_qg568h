@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, IndianRupee, Package } from 'lucide-react';
 
 const MODELS_KEY = 'farmaking_models';
@@ -31,6 +31,7 @@ export default function ModelsManager({ onModelsChange }) {
     setModels((prev) => [payload, ...prev]);
     setForm({ name: '', cost: '', customerPrice: '', dealerPrice: '' });
     setOpen(false);
+    window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Model added successfully!' } }));
   };
 
   return (
@@ -53,7 +54,6 @@ export default function ModelsManager({ onModelsChange }) {
         </button>
       </header>
 
-      {/* List */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-neutral-300">
           <thead>
@@ -68,9 +68,9 @@ export default function ModelsManager({ onModelsChange }) {
             {models.map((m) => (
               <tr key={m.id} className="hover:bg-white/5">
                 <td className="px-4 py-3">{m.name}</td>
-                <td className="px-4 py-3 flex items-center gap-1"><IndianRupee className="w-4 h-4" />{m.cost.toLocaleString('en-IN')}</td>
-                <td className="px-4 py-3 flex items-center gap-1 text-emerald-300"><IndianRupee className="w-4 h-4" />{m.customerPrice.toLocaleString('en-IN')}</td>
-                <td className="px-4 py-3 flex items-center gap-1 text-teal-300"><IndianRupee className="w-4 h-4" />{m.dealerPrice.toLocaleString('en-IN')}</td>
+                <td className="px-4 py-3 flex items-center gap-1"><IndianRupee className="w-4 h-4" />₹{m.cost.toLocaleString('en-IN')}</td>
+                <td className="px-4 py-3 flex items-center gap-1 text-emerald-300"><IndianRupee className="w-4 h-4" />₹{m.customerPrice.toLocaleString('en-IN')}</td>
+                <td className="px-4 py-3 flex items-center gap-1 text-teal-300"><IndianRupee className="w-4 h-4" />₹{m.dealerPrice.toLocaleString('en-IN')}</td>
               </tr>
             ))}
             {models.length === 0 && (
@@ -82,9 +82,8 @@ export default function ModelsManager({ onModelsChange }) {
         </table>
       </div>
 
-      {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 transition">
           <div className="w-full max-w-lg bg-neutral-900 rounded-2xl ring-1 ring-white/10 p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">Create Model</h3>

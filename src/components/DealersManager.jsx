@@ -30,6 +30,7 @@ export default function DealersManager({ onDealersChange }) {
     setDealers((prev) => [payload, ...prev]);
     setForm({ name: '', location: '', referenceId: '' });
     setOpen(false);
+    window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Dealer added successfully!' } }));
   };
 
   return (
@@ -70,8 +71,8 @@ export default function DealersManager({ onDealersChange }) {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4">
-          <div className="w-full max-w-lg bg-neutral-900 rounded-2xl ring-1 ring-white/10 p-6">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 transition">
+          <div className="w-full max-w-lg bg-neutral-900 rounded-2xl ring-1 ring-white/10 p-6 animate-in fade-in zoom-in">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">Add Dealer</h3>
               <button onClick={() => setOpen(false)} className="text-neutral-400 hover:text-white">✕</button>

@@ -57,6 +57,7 @@ export default function CustomersManager() {
     setCustomers((prev) => [payload, ...prev]);
     setOpen(false);
     setForm({ type: 'direct', dealerId: '', name: '', contact: '', modelId: '', hasReference: false });
+    window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Customer added successfully!' } }));
   };
 
   const dealerName = (id) => dealers.find((d) => d.id === id)?.name || '—';
@@ -102,8 +103,8 @@ export default function CustomersManager() {
                 <td className="px-4 py-3">{c.type === 'direct' ? 'Direct' : "Dealer's"}</td>
                 <td className="px-4 py-3">{c.type === 'dealer' ? dealerName(c.dealerId) : '—'}</td>
                 <td className="px-4 py-3">{modelName(c.modelId)}</td>
-                <td className="px-4 py-3 flex items-center gap-1 text-emerald-300"><IndianRupee className="w-4 h-4" />{c.sellingPrice.toLocaleString('en-IN')}</td>
-                <td className="px-4 py-3 flex items-center gap-1 text-teal-300"><IndianRupee className="w-4 h-4" />{c.profit.toLocaleString('en-IN')}</td>
+                <td className="px-4 py-3 flex items-center gap-1 text-emerald-300"><IndianRupee className="w-4 h-4" />₹{c.sellingPrice.toLocaleString('en-IN')}</td>
+                <td className="px-4 py-3 flex items-center gap-1 text-teal-300"><IndianRupee className="w-4 h-4" />₹{c.profit.toLocaleString('en-IN')}</td>
                 <td className="px-4 py-3">{c.contact || '—'}</td>
               </tr>
             ))}
@@ -117,7 +118,7 @@ export default function CustomersManager() {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 transition">
           <div className="w-full max-w-2xl bg-neutral-900 rounded-2xl ring-1 ring-white/10 p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">Add Customer</h3>
@@ -198,20 +199,19 @@ export default function CustomersManager() {
                 <label htmlFor="hasReference" className="text-sm text-neutral-300">Has Reference (Adds ₹20,000)</label>
               </div>
 
-              {/* Computed */}
               <div className="md:col-span-3 mt-2 grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="p-3 rounded-lg bg-white/5 ring-1 ring-white/10">
                   <div className="text-xs text-neutral-400">Selling Price</div>
                   <div className="flex items-center gap-1 text-emerald-300 font-semibold">
                     <IndianRupee className="w-4 h-4" />
-                    {computed.selling.toLocaleString('en-IN')}
+                    ₹{computed.selling.toLocaleString('en-IN')}
                   </div>
                 </div>
                 <div className="p-3 rounded-lg bg-white/5 ring-1 ring-white/10">
                   <div className="text-xs text-neutral-400">Profit</div>
                   <div className="flex items-center gap-1 text-teal-300 font-semibold">
                     <IndianRupee className="w-4 h-4" />
-                    {computed.profit.toLocaleString('en-IN')}
+                    ₹{computed.profit.toLocaleString('en-IN')}
                   </div>
                 </div>
               </div>

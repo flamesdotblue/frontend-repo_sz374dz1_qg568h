@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Login from './components/Login';
 import Sidebar from './components/Sidebar';
 import ModelsManager from './components/ModelsManager';
 import DealersManager from './components/DealersManager';
 import CustomersManager from './components/CustomersManager';
-import { Menu } from 'lucide-react';
 
 function Topbar({ active, onChange, onLogout }) {
   const items = [
@@ -35,6 +34,36 @@ function Topbar({ active, onChange, onLogout }) {
   );
 }
 
+function Toasts() {
+  const [toasts, setToasts] = useState([]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      const id = crypto.randomUUID();
+      const toast = { id, message: e.detail?.message || 'Action completed', type: e.detail?.type || 'success' };
+      setToasts((prev) => [...prev, toast]);
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, e.detail?.duration || 2200);
+    };
+    window.addEventListener('toast', handler);
+    return () => window.removeEventListener('toast', handler);
+  }, []);
+
+  return (
+    <div className="fixed bottom-4 right-4 z-[60] space-y-2">
+      {toasts.map((t) => (
+        <div
+          key={t.id}
+          className={`px-4 py-3 rounded-xl shadow-lg ring-1 backdrop-blur transition-all duration-300 bg-emerald-500/10 ring-emerald-400/30 text-emerald-200`}
+        >
+          {t.message}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [section, setSection] = useState('models');
@@ -54,6 +83,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-900 text-neutral-200">
+      <Toasts />
       <div className="flex">
         <Sidebar active={section} onChange={setSection} onLogout={handleLogout} />
         <main className="flex-1 min-h-screen">
